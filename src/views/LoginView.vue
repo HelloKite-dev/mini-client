@@ -1,4 +1,3 @@
-아이디 입력 비밀번호 입력 로그인 버튼 로그인 성공하면 /posts 로 이동
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -15,19 +14,32 @@ const form = ref({
 })
 
 const login = async () => {
-  console.log('로그인 시도', form.value)
-  if (!form.value.userId || !form.value.userPw) return
-
+  if (!form.value.userId) {
+    alert('아이디를 입력해주세요.')
+    return
+  }
+  if (!form.value.userPw) {
+    alert('비밀번호를 입력해주세요.')
+    return
+  }
   try {
-    const response = await loginApi({
+    const res = await loginApi({
       userId: form.value.userId,
       userPw: form.value.userPw,
     })
-    userStore.setLogin(response.data)
+    userStore.setLogin(res.data)
     router.push('/posts')
   } catch (error) {
     alert('아이디와 비밀번호를 확인해주세요.')
   }
+}
+
+const member = () => {
+  router.push('/member')
+}
+
+const password = () => {
+  router.push('password')
 }
 </script>
 
@@ -45,6 +57,12 @@ const login = async () => {
           <VRow>
             <VCol>
               <VTextField v-model="form.userPw" required label="PW" type="password" />
+              <div style="display: flex; justify-content: space-between">
+                <a @click="password" style="cursor: pointer; text-decoration: underline"
+                  >비밀번호 찾기</a
+                >
+                <a @click="member" style="cursor: pointer; text-decoration: underline">회원가입</a>
+              </div>
             </VCol>
           </VRow>
           <VRow>
