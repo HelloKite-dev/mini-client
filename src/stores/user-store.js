@@ -7,11 +7,13 @@ export const useUserStore = defineStore('user', () => {
   const token = ref(null)
   const userId = ref(null)
   const userNm = ref(null)
+  const nickname = ref(null)
 
   function setLogin(loginData) {
     token.value = loginData.token
     userId.value = loginData.userId
     userNm.value = loginData.userNm
+    nickname.value = loginData.nickname
     localStorage.setItem('token', loginData.token)
   }
 
@@ -19,10 +21,11 @@ export const useUserStore = defineStore('user', () => {
     token.value = null
     userId.value = null
     userNm.value = null
+    nickname.value = null
     localStorage.removeItem('token')
   }
 
   const isLoggedIn = () => !!token.value
 
-  return { token, userId, userNm, setLogin, setLogout, isLoggedIn }
+  return { token, userId, userNm, nickname, setLogin, setLogout, isLoggedIn }
 })
