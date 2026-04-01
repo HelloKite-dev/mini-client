@@ -158,6 +158,11 @@ const goList = () => {
 const goMypage = () => {
   router.push(`/mypage/${post.value.userId}`)
 }
+
+const goMypage2 = (comment) => {
+  router.push(`/mypage/${comment.userId}`)
+}
+
 // 파일 목록 조회
 const fetchFiles = async () => {
   const res = await getFileListApi(route.params.id)
@@ -245,7 +250,9 @@ onMounted(() => {
     <VCard class="pa-4">
       <h4 class="mb-4">댓글 {{ commentList.length }}</h4>
       <div v-for="comment in commentList" :key="comment.id" class="mb-3">
-        <div style="font-weight: bold">{{ comment.nickname }}</div>
+        <div style="font-weight: bold" class="author" @click="goMypage2(comment)">
+          {{ comment.nickname }}
+        </div>
         <div v-if="isEditingComment !== comment.id">{{ comment.content }}</div>
         <VTextField v-else v-model="comment.content" />
         <div style="color: gray; font-size: 12px">{{ displayDate(comment) }}</div>
