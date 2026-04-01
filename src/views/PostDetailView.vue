@@ -256,7 +256,10 @@ onMounted(() => {
           >수정</VBtn
         >
         <VBtn
-          v-if="userStore.userId === comment.userId || userStore.userId === post.userId"
+          v-if="
+            !isEditingComment &&
+            (userStore.userId === comment.userId || userStore.userId === post.userId)
+          "
           @click="deleteComment(comment.id)"
           variant="text"
           color="red"
