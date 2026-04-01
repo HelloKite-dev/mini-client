@@ -33,6 +33,14 @@ const password = async () => {
     alert('일치하는 사용자가 없습니다.')
   }
 }
+
+const rules = {
+  userEmail: (value) => {
+    const pattern =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return pattern.test(value) || 'E-mail 형식이 맞지 않습니다.'
+  },
+}
 </script>
 
 <template>
@@ -45,12 +53,23 @@ const password = async () => {
       <VCardText>
         <VForm>
           <VRow>
-            <VCol cols="2">아이디</VCol>
-            <VCol cols="3"><VTextField v-model="conditions.userId"></VTextField></VCol>
+            <VCol cols="6">
+              <VTextField
+                label="아이디"
+                v-model="conditions.userId"
+                placeholder="영어로 입력해주세요"
+                @input="conditions.userId = conditions.userId.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '')"
+              />
+            </VCol>
           </VRow>
           <VRow>
-            <VCol cols="2">이메일</VCol>
-            <VCol cols="3"><VTextField v-model="conditions.userEmail"></VTextField></VCol>
+            <VCol cols="6">
+              <VTextField
+                label="이메일"
+                v-model="conditions.userEmail"
+                :rules="[rules.userEmail]"
+              />
+            </VCol>
             <VBtn @click="password">찾기</VBtn>
           </VRow>
         </VForm>
