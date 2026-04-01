@@ -15,6 +15,9 @@ export const useUserStore = defineStore('user', () => {
     userNm.value = loginData.userNm
     nickname.value = loginData.nickname
     localStorage.setItem('token', loginData.token)
+    localStorage.setItem('userId', loginData.userId)
+    localStorage.setItem('userNm', loginData.userNm)
+    localStorage.setItem('nickname', loginData.nickname)
   }
 
   function setLogout() {
@@ -23,6 +26,9 @@ export const useUserStore = defineStore('user', () => {
     userNm.value = null
     nickname.value = null
     localStorage.removeItem('token')
+    localStorage.removeItem('userId')
+    localStorage.removeItem('userNm')
+    localStorage.removeItem('nickname')
   }
 
   const isLoggedIn = () => !!token.value
