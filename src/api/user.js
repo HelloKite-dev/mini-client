@@ -39,3 +39,8 @@ export const updateUserPwApi = async (data) => {
 export const resetUserPwApi = async (data) => {
   return await api.put('/api/users/reset-password', data)
 }
+
+// 닉네임 변경
+export const updateNicknameApi = async (data) => {
+  return await api.put('/api/users/nickname', data)
+}

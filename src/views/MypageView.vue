@@ -1,5 +1,5 @@
 <script setup>
-import { getUserApi, updateUserPwApi } from '@/api/user.js'
+import { getUserApi, updateUserPwApi, checkNicknameApi, updateNicknameApi } from '@/api/user.js'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user-store'
@@ -49,6 +49,22 @@ const changePw = async () => {
   userStore.setLogout()
   router.push('/login')
 }
+
+const changeNickname = async () => {
+  const res = await checkNicknameApi(user.value.nickname)
+  if (res.data) {
+    alert('이미 사용중인 닉네임입니다.')
+  } else {
+    await updateNicknameApi({
+      userId: user.value.userId,
+      nickname: user.value.nickname,
+    })
+
+    userStore.nickname = user.value.nickname
+    localStorage.setItem('nickname', user.value.nickname)
+    alert('변경이 완료되었습니다.')
+  }
+}
 </script>
 
 <template>
@@ -66,7 +82,13 @@ const changePw = async () => {
           </VRow>
           <VRow>
             <VCol cols="2">닉네임</VCol>
-            <VCol cols="3">{{ user.nickname }}</VCol>
+            <VCol v-if="userStore.userId !== route.params.userId" cols="3">{{
+              user.nickname
+            }}</VCol>
+            <VCol cols="3" v-if="userStore.userId === route.params.userId">
+              <VTextField v-model="user.nickname"></VTextField>
+              <VBtn @click="changeNickname">저장</VBtn>
+            </VCol>
           </VRow>
           <VRow>
             <VCol cols="2">아이디</VCol>
