@@ -17,8 +17,14 @@ const pwForm = ref({
 const user = ref({})
 
 const fetchUser = async () => {
-  const res = await getUserApi(route.params.userId)
-  user.value = res.data
+  try {
+    const res = await getUserApi(route.params.userId)
+    user.value = res.data
+  } catch (e) {
+    alert('사용자를 찾을 수 없습니다. 다시 로그인 해주세요.')
+    userStore.setLogout()
+    router.push('/login')
+  }
 }
 
 // 목록으로 이동
@@ -38,31 +44,39 @@ const changePw = async () => {
   if (!pwForm.value.newPw === pwForm.value.confirmPw) {
     alert('새 비밀번호가 일치하지 않습니다.')
   }
-  await updateUserPwApi({
-    userId: userStore.userId,
-    currentPw: pwForm.value.currentPw,
-    newPw: pwForm.value.newPw,
-  })
+  try {
+    await updateUserPwApi({
+      userId: userStore.userId,
+      currentPw: pwForm.value.currentPw,
+      newPw: pwForm.value.newPw,
+    })
 
-  alert('변경이 완료 되었습니다. 변경된 비밀번호로 다시 로그인 해주세요.')
+    alert('변경이 완료 되었습니다. 변경된 비밀번호로 다시 로그인 해주세요.')
 
-  userStore.setLogout()
-  router.push('/login')
+    userStore.setLogout()
+    router.push('/login')
+  } catch (e) {
+    alert('비밀번호 변경에 실패했습니다. 다시 시도해주세요.')
+  }
 }
 
 const changeNickname = async () => {
-  const res = await checkNicknameApi(user.value.nickname)
-  if (res.data) {
-    alert('이미 사용중인 닉네임입니다.')
-  } else {
-    await updateNicknameApi({
-      userId: user.value.userId,
-      nickname: user.value.nickname,
-    })
+  try {
+    const res = await checkNicknameApi(user.value.nickname)
+    if (res.data) {
+      alert('이미 사용중인 닉네임입니다.')
+    } else {
+      await updateNicknameApi({
+        userId: user.value.userId,
+        nickname: user.value.nickname,
+      })
 
-    userStore.nickname = user.value.nickname
-    localStorage.setItem('nickname', user.value.nickname)
-    alert('변경이 완료되었습니다.')
+      userStore.nickname = user.value.nickname
+      localStorage.setItem('nickname', user.value.nickname)
+      alert('변경이 완료되었습니다.')
+    }
+  } catch (e) {
+    alert('닉네임 변경에 실패했습니다. 다시 시도해주세요.')
   }
 }
 </script>

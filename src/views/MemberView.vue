@@ -2,6 +2,7 @@
 import { memberApi, checkUserIdApi, checkNicknameApi, checkUserEmailApi } from '@/api/user.js'
 import { ref, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { P } from 'vue-router/dist/index-DFCq6eJK'
 
 const router = useRouter()
 
@@ -70,52 +71,66 @@ const fnSave = async () => {
     return
   }
 
-  await memberApi({
-    userId: conditions.userId,
-    userPw: conditions.userPw,
-    userNm: conditions.userNm,
-    nickname: conditions.nickname,
-    gender: conditions.gender,
-    birth: conditions.birth,
-    userEmail: conditions.userEmail,
-  })
+  try {
+    await memberApi({
+      userId: conditions.userId,
+      userPw: conditions.userPw,
+      userNm: conditions.userNm,
+      nickname: conditions.nickname,
+      gender: conditions.gender,
+      birth: conditions.birth,
+      userEmail: conditions.userEmail,
+    })
 
-  alert('가입이 완료되었습니다.')
-  goMain()
+    alert('가입이 완료되었습니다.')
+    goMain()
+  } catch (e) {
+    alert('가입이 실패했습니다. 다시 시도해 주세요.')
+  }
 }
 
 // 아이디 중복 확인
 const checkUserId = async () => {
-  const res = await checkUserIdApi(conditions.userId)
-  if (res.data) {
-    alert('이미 사용중인 아이디입니다.')
-  } else {
-    alert('사용 가능한 아이디입니다.')
-    isUserIdChecked.value = true
+  try {
+    const res = await checkUserIdApi(conditions.userId)
+    if (res.data) {
+      alert('이미 사용중인 아이디입니다.')
+    } else {
+      alert('사용 가능한 아이디입니다.')
+      isUserIdChecked.value = true
+    }
+  } catch (e) {
+    alert('아이디를 다시 입력 후 중복 확인 해주세요.')
   }
 }
 
 // 닉네임 중복 확인
 const checkNickname = async () => {
-  console.log('닉네임', conditions.nickname)
-  const res = await checkNicknameApi(conditions.nickname)
-  if (res.data) {
-    alert('이미 사용중인 닉네임입니다.')
-  } else {
-    alert('사용 가능한 닉네임입니다.')
-    isNicknameChecked.value = true
+  try {
+    const res = await checkNicknameApi(conditions.nickname)
+    if (res.data) {
+      alert('이미 사용중인 닉네임입니다.')
+    } else {
+      alert('사용 가능한 닉네임입니다.')
+      isNicknameChecked.value = true
+    }
+  } catch (e) {
+    alert('닉네임을 다시 입력 후 중복 확인 해주세요.')
   }
 }
 
 // 이메일 중복 확인
 const checkUserEmail = async () => {
-  console.log('닉네임', conditions.userEmail)
-  const res = await checkUserEmailApi(conditions.userEmail)
-  if (res.data) {
-    alert('이미 사용중인 이메일입니다.')
-  } else {
-    alert('사용 가능한 이메일입니다.')
-    isEmailChecked.value = true
+  try {
+    const res = await checkUserEmailApi(conditions.userEmail)
+    if (res.data) {
+      alert('이미 사용중인 이메일입니다.')
+    } else {
+      alert('사용 가능한 이메일입니다.')
+      isEmailChecked.value = true
+    }
+  } catch (e) {
+    alert('이메일을 다시 입력 후 중복 확인 해주세요.')
   }
 }
 

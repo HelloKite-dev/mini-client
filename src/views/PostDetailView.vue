@@ -10,6 +10,7 @@ import {
   deleteCommentApi,
 } from '@/api/comment.js'
 import { getFileListApi, downFileApi, deleteFileApi } from '@/api/file.js'
+import { P } from 'vue-router/dist/index-DFCq6eJK'
 
 const router = useRouter()
 const route = useRoute()
@@ -40,14 +41,22 @@ const isEditing = ref(null)
 
 // 게시글 상세 조회
 const fetchPost = async () => {
-  const res = await getPostDetailApi(route.params.id)
-  post.value = res.data
+  try {
+    const res = await getPostDetailApi(route.params.id)
+    post.value = res.data
+  } catch (e) {
+    alert('게시글 조회에 실패했습니다. 다시 시도해주세요.')
+  }
 }
 
 // 게시글 삭제
 const deletePost = async () => {
-  await deletePostApi(route.params.id)
-  router.push('/posts')
+  try {
+    await deletePostApi(route.params.id)
+    router.push('/posts')
+  } catch (e) {
+    alert('게시글 삭제에 실패했습니다. 다시 시도해주세요.')
+  }
 }
 
 // 게시글 저장(수정 시)
@@ -91,8 +100,12 @@ const goDetail = () => {
 
 // 댓글 조회
 const fetchComments = async () => {
-  const res = await getCommentApi(route.params.id)
-  commentList.value = res.data
+  try {
+    const res = await getCommentApi(route.params.id)
+    commentList.value = res.data
+  } catch (e) {
+    alert('댓글 조회에 실패했습니다. 다시 시도해주세요.')
+  }
 }
 
 // 댓글 작성
@@ -165,20 +178,28 @@ const goMypage2 = (comment) => {
 
 // 파일 목록 조회
 const fetchFiles = async () => {
-  const res = await getFileListApi(route.params.id)
-  fileList.value = res.data
+  try {
+    const res = await getFileListApi(route.params.id)
+    fileList.value = res.data
+  } catch (e) {
+    alert('파일 목록 조회에 실패했습니다. 다시 시도해주세요.')
+  }
 }
 
 // 파일 다운로드
 const downFile = async (file) => {
-  const res = await downFileApi(file.fileId)
-  const url = window.URL.createObjectURL(new Blob([res.data]))
-  const link = document.createElement('a')
-  link.href = url
-  link.setAttribute('download', file.fileNm)
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
+  try {
+    const res = await downFileApi(file.fileId)
+    const url = window.URL.createObjectURL(new Blob([res.data]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', file.fileNm)
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  } catch (e) {
+    alert('파일 다운로드에 실패했습니다. 다시 시도해주세요.')
+  }
 }
 
 // 파일 삭제

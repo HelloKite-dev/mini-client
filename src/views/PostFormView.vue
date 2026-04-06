@@ -24,22 +24,30 @@ const fnSave = async () => {
     return
   }
 
-  const res = await createPostApi({
-    userId: userStore.userId,
-    title: post.value.title,
-    content: post.value.content,
-  })
+  try {
+    const res = await createPostApi({
+      userId: userStore.userId,
+      title: post.value.title,
+      content: post.value.content,
+    })
 
-  const postId = res.data
+    const postId = res.data
 
-  // 파일 업로드
-  for (const file of selectedFiles.value) {
-    await uploadFileApi(postId, file)
+    // 파일 업로드
+    for (const file of selectedFiles.value) {
+      try {
+        await uploadFileApi(postId, file)
+      } catch (e) {
+        alert(`${file.name} 파일 업로드에 실패했습니다.`)
+      }
+    }
+
+    alert('작성이 완료되었습니다.')
+    // 상세페이지 이동
+    goDetail(postId)
+  } catch (e) {
+    alert('작성에 실패했습니다. 다시 시도해주세요.')
   }
-
-  alert('작성이 완료되었습니다.')
-  // 상세페이지 이동
-  goDetail(postId)
 }
 
 // 목록으로 이동
